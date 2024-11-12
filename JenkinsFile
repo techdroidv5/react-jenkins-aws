@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    tools {
+        NodeJS 'NodeJS 23'
+    }
+
+    environment {
+        NODEJS_HOME = tool name: 'NodeJS', type: 'NodeJS' // Define your NodeJS version here
+        PATH = "${NODEJS_HOME}/bin:${env.PATH}"
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                // Pulls the code from GitHub
+                git 'https://github.com/techdroidv5/react-jenkins-aws.git'
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                // Install npm dependencies
+                sh 'npm install'
+            }
+        }
+        stage('Build App') {
+            steps {
+                // Run npm build command to create production-ready files
+                sh 'npm run build'
+            }
+        }
+        stage('Run App') {
+            steps {
+                // Optionally, you can start the React app in the background
+                sh 'npm start &'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline completed!'
+        }
+        success {
+            echo 'Build succeeded!'
+        }
+        failure {
+            echo 'Build failed!'
+        }
+    }
+}
