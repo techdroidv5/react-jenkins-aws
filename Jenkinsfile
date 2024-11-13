@@ -27,7 +27,8 @@ pipeline {
         stage('Run App') {
             steps {
                 // Optionally, you can start the React app in the background
-                bat 'npm start &'
+                bat 'npm install -g http-server'
+                bat 'http-server ./build -p 3000 &'
             }
         }
     }
